@@ -1,36 +1,16 @@
 package model;
-
-import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.Map;
 
 
-public abstract class FiniteState<E extends Enumeration> implements State<E>
+public class FiniteState
 {
-    protected HashMap<E, FiniteState<E>> map;
+    protected Map<Character, FiniteState> map;
 
-    public FiniteState(HashMap<E, FiniteState<E>> map){
+    public FiniteState(Map<Character, FiniteState> map){
         this.map = map;
     }
-
-    public void transition(E input) {
-        if(input.hasMoreElements()){
-            E element = (E) input.nextElement();
-            if(this.map.containsKey(element)){
-                this.map.get(element).transition(element);
-            }
-        }
+    public FiniteState transition(Character q ){
+        return map.get(q);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FiniteState<?> that = (FiniteState<?>) o;
-        return map.equals(that.map);
-    }
-
-    @Override
-    public int hashCode() {
-        return map.hashCode();
-    }
 }

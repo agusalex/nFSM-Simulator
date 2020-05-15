@@ -1,27 +1,28 @@
 package model;
 
-import java.util.Enumeration;
-public class EnumString implements Enumeration<EnumString> {
-    private String string;
+public class IterableString {
+    public String string;
 
-    public EnumString(String string){
+    public IterableString(String string){
         this.string = string;
     }
 
-    public boolean hasMoreElements() {
+    public boolean hasMore() {
         return string.length() != 0;
     }
 
-
-    public EnumString nextElement() {
-        return hasMoreElements()? new EnumString(string.substring(string.length()-1)) : null;
+    public IterableString cutNext() {
+        return hasMore()? new IterableString(string.substring(0,string.length()-1)) : null;
+    }
+    public char getNext(){
+        return string.charAt(string.length()-1);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EnumString that = (EnumString) o;
+        IterableString that = (IterableString) o;
         return string.equals(that.string);
     }
 
