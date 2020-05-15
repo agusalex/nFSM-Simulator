@@ -1,7 +1,7 @@
 package model;
 
 import java.util.Enumeration;
-public class EnumString implements Enumeration<String> {
+public class EnumString implements Enumeration<EnumString> {
     private String string;
 
     public EnumString(String string){
@@ -12,8 +12,9 @@ public class EnumString implements Enumeration<String> {
         return string.length() != 0;
     }
 
-    public String nextElement() {
-        return hasMoreElements()? string.substring(string.length()-1) : null;
+
+    public EnumString nextElement() {
+        return hasMoreElements()? new EnumString(string.substring(string.length()-1)) : null;
     }
 
     @Override

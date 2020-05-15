@@ -6,12 +6,20 @@ import java.util.HashMap;
 
 public abstract class FiniteState<E extends Enumeration> implements State<E>
 {
-    private HashMap<E, FiniteState<E>> map;
+    protected HashMap<E, FiniteState<E>> map;
 
     public FiniteState(HashMap<E, FiniteState<E>> map){
         this.map = map;
     }
 
+    public void transition(E input) {
+        if(input.hasMoreElements()){
+            E element = (E) input.nextElement();
+            if(this.map.containsKey(element)){
+                this.map.get(element).transition();
+            }
+        }
+    }
 
     @Override
     public boolean equals(Object o) {

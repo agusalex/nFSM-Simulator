@@ -9,6 +9,11 @@ public class StringFiniteState extends FiniteState<EnumString> {
     }
 
     public void transition(EnumString input) {
-
+        if(input.hasMoreElements()){
+            EnumString element = input.nextElement();
+            if(this.map.containsKey(element)){
+                this.map.get(element).transition(element);
+            }
+        }
     }
 }
