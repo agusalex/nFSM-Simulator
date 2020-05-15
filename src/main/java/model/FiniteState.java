@@ -16,7 +16,7 @@ public abstract class FiniteState<E extends Enumeration> implements State<E>
         if(input.hasMoreElements()){
             E element = (E) input.nextElement();
             if(this.map.containsKey(element)){
-                this.map.get(element).transition();
+                this.map.get(element).transition(element);
             }
         }
     }
