@@ -25,6 +25,6 @@ public class FSMachineTest {
 
         finalStates.add(finalState);
         FSMachine machine = new FSMachine(initialState,finalStates);
-        Assert.check(machine.run(new IterableString("1010101101")));
+        Assert.check(machine.run("1010101101"));
     }
 }

@@ -12,20 +12,19 @@ public class FSMachine {
     }
 
 
-    public boolean run(IterableString input) {
+    public boolean run(String input) {
         return acceptingStates.contains(transition(initialState, input));
     }
 
-    private FiniteState transition(FiniteState q, IterableString a){
-        if(!a.hasMore()) return q;
+    private FiniteState transition(FiniteState q, String a){
+        if(a.length() == 0) return q;
 
-        IterableString string= a.cutNext();
-        System.err.println(string.string);
+        char c = a.charAt(a.length()-1);
+        String smaller = a.substring(0,a.length()-1);
+        System.err.println(smaller);
 
-        char c = a.getNext();
 
-        return transition(q.transition(c),string);
+        return transition(q.transition(c),smaller);
     }
-
 
 }
