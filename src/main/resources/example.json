@@ -1,0 +1,15 @@
+{
+"deterministic": false,
+"language":[ "a","b","c","d"],
+ "states": [
+   {
+     "name": 1,
+     "final": true,
+      "a": [3,4,5],
+      "d": [4]
+   }
+ ]
+}
+
+
+

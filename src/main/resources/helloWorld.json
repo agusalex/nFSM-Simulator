@@ -1,0 +1,21 @@
+{
+"deterministic": true,
+"language":[ "1","0"],
+ "states": [
+   {
+     "name": "initial",
+     "initial": true,
+     "1": ["final"],
+     "0": ["final"]
+   },
+   {
+     "name": "final",
+     "final": true,
+     "1": ["final"],
+     "0": ["final"]
+   }
+ ]
+}
+
+
+
