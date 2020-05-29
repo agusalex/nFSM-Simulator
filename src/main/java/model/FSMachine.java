@@ -3,10 +3,10 @@ package model;
 import java.util.Set;
 
 public class FSMachine {
-    private FiniteState initialState;
-    private Set<FiniteState> acceptingStates;
+    private State initialState;
+    private Set<State> acceptingStates;
 
-    public FSMachine(FiniteState initialState, Set<FiniteState> acceptingStates){
+    public FSMachine(State initialState, Set<State> acceptingStates){
         this.initialState = initialState;
         this.acceptingStates = acceptingStates;
     }
@@ -16,12 +16,12 @@ public class FSMachine {
         return acceptingStates.contains(transition(initialState, input));
     }
 
-    private FiniteState transition(FiniteState q, String a){
+    private State transition(State q, String a){
         if(a.length() == 0) return q;
 
         char c = a.charAt(a.length()-1);
         String smaller = a.substring(0,a.length()-1);
-        System.err.println(smaller);
+        System.out.println(smaller);
 
 
         return transition(q.transition(c),smaller);

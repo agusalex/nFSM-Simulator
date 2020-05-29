@@ -5,31 +5,32 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.Test;
-import sun.misc.IOUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FSMachineTest {
 
 
     @Test
     public void run() {
-        HashMap<Character,FiniteState> finalStateTransitions = new HashMap<>();
-        FiniteState finalState = new FiniteState(finalStateTransitions,"final");
+        HashMap<Character, State> finalStateTransitions = new HashMap<>();
+        State finalState = new State(finalStateTransitions,"final");
         finalStateTransitions.put('1',finalState);
         finalStateTransitions.put('0',finalState);
-        HashMap<Character,FiniteState> initialStateTransitions = new HashMap<>();
+        HashMap<Character, State> initialStateTransitions = new HashMap<>();
         initialStateTransitions.put('1',finalState);
         initialStateTransitions.put('0',finalState);
-        FiniteState initialState = new FiniteState(initialStateTransitions,"initial");
+        State initialState = new State(initialStateTransitions,"initial");
 
-        HashSet<FiniteState> finalStates = new HashSet<>();
+        HashSet<State> finalStates = new HashSet<>();
 
         finalStates.add(finalState);
         FSMachine machine = new FSMachine(initialState,finalStates);
-        machine.run("1010101101");
+        assertTrue(machine.run("1010101101"));
     }
 
     @Test
@@ -80,38 +81,26 @@ public class FSMachineTest {
         });
 
         System.err.println("Language: "+language +",Initial: "+initial.get(0)+" ,Final: "+Final+" Transitions: "+transitions);
-        printGraph(buildGraph(initial.get(0),transitions));
+
+        HashMap<String, State> states = new  HashMap<>();
+
+        transitions.forEach((k,v) -> states.put(k,new State(k)));
+
+        transitions.forEach((k,v) -> {
+            State state = states.get(k);
+            v.forEach(transition -> state.addTransition(transition.getFirst(),states.get(transition.getSecond())));
+        });
+
+
+        State initialState = states.get(initial.get(0));
+        HashSet<State> finalStates = new HashSet<>();
+        Final.forEach(state -> finalStates.add(states.get(state)));
+        FSMachine fsMachine = new FSMachine(initialState,finalStates);
+
+        assertTrue(fsMachine.run("1010101101"));
+
     }
 
-
-    public void printGraph(FiniteState initial){
-
-       initial.getTransitions().forEach((c,v) ->{
-           System.err.println(c+" -> "+v.toString());
-           printGraph(v);
-       });
-    }
-
-
-    public FiniteState buildGraph(String node, HashMap<String, HashSet<Tuple<Character,String>>> transitions){
-
-
-
-
-        HashMap<Character, FiniteState> map = new HashMap<>();
-        for (Tuple<Character,String> tuple:transitions.get(node)
-             ) {
-
-            if(!node.equals(tuple.getSecond())) { //not "caso base"
-                FiniteState newState = buildGraph(tuple.getSecond(), transitions);
-                map.put(tuple.getFirst(),newState);
-            }
-
-        }
-
-
-        return new FiniteState( map,node);
-    }
 
 
     public JSONObject readResource(JSONParser parser,String filename){
