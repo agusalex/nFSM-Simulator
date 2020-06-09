@@ -26,8 +26,9 @@ public class State
                 Objects.equals(name, that.name);
     }
 
-
-
+    public String getName() {
+        return name;
+    }
 
     @Override
     public String toString() {

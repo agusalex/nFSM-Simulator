@@ -6,23 +6,23 @@
   ],
   "states": [
     {
-      "name": "initial",
+      "name": "1",
       "initial": true,
       "1": [
-        "final"
+        "2"
       ],
       "0": [
-        "final"
+        "2"
       ]
     },
     {
-      "name": "final",
+      "name": "2",
       "final": true,
       "1": [
-        "final"
+        "2"
       ],
       "0": [
-        "final"
+        "2"
       ]
     }
   ]

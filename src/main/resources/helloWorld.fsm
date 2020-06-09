@@ -1,0 +1,7 @@
+1,0
+2
+2
+"1", 1 -> "final"
+"1", 0 -> "final"
+"final", 0 -> "final"
+"final", 1 -> "final"
