@@ -1,5 +1,5 @@
 {
-  "deterministic": true,
+  "deterministic": false,
   "language": [
     "1",
     "0"
@@ -9,10 +9,10 @@
       "name": "1",
       "initial": true,
       "1": [
-        "2"
+        "2","1"
       ],
       "0": [
-        "1"
+        "2"
       ]
     },
     {

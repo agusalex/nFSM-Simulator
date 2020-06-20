@@ -5,8 +5,8 @@ import java.util.Objects;
 import java.util.Set;
 
 public class FSMachine {
-    private State initialState;
-    private Set<State> acceptingStates;
+    private final State initialState;
+    private final Set<State> acceptingStates;
 
     public FSMachine(State initialState, Set<State> acceptingStates) {
         this.initialState = initialState;
@@ -14,11 +14,11 @@ public class FSMachine {
     }
 
 
-    public boolean run(String input) {
+    public boolean run(String input) throws Exception {
         return acceptingStates.contains(transition(initialState, input));
     }
 
-    public ArrayList<Tuple<String,String>> debug(String input) {
+    public ArrayList<Tuple<String, String>> debug(String input) {
         return debugTransition(initialState, input, new ArrayList<>());
     }
 
@@ -44,21 +44,25 @@ public class FSMachine {
         return Objects.hash(initialState, acceptingStates);
     }
 
-    private State transition(State q, String a) {
+    private State transition(State q, String a) throws Exception {
         if (a.length() == 0) return q;
         char c = a.charAt(a.length() - 1);
         String smaller = a.substring(0, a.length() - 1);
         return transition(q.transition(c), smaller);
     }
 
-    private ArrayList<Tuple<String,String>> debugTransition(State q, String a, ArrayList<Tuple<String,String>> history) {
+    private ArrayList<Tuple<String, String>> debugTransition(State q, String a, ArrayList<Tuple<String, String>> history) {
 
         if (a.length() == 0) return history;
         char c = a.charAt(a.length() - 1);
         String smaller = a.substring(0, a.length() - 1);
         System.out.println(smaller);
-        history.add(new Tuple<>(""+c,q.getName()));
-        debugTransition(q.transition(c), smaller,history);
+        history.add(new Tuple<>("" + c, q.getName()));
+        try {
+            debugTransition(q.transition(c), smaller, history);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return history;
     }
 

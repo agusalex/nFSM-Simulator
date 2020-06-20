@@ -14,12 +14,17 @@ public class Tuple<T, U> {
 
     }
 
-    public T getFirst() { return first; }
-    public U getSecond() { return second; }
+    public T getFirst() {
+        return first;
+    }
+
+    public U getSecond() {
+        return second;
+    }
 
     @Override
-    public String toString(){
-        return "( "+first+", "+second+")";
+    public String toString() {
+        return "( " + first + ", " + second + ")";
     }
 
     @Override

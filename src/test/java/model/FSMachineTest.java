@@ -29,8 +29,8 @@ public class FSMachineTest {
 
     @Before
     public void setUp() {
-        plainNumbers = FSMachineFactory.get().getFSMachineFromPlainText("helloWorld_numbers");
-        jsonNumbers = FSMachineFactory.get().getFsMachineFromJson("helloWorld_numbers");
+        plainNumbers = FSMachineFactory.get().FromPlainText("helloWorld_numbers");
+        jsonNumbers = FSMachineFactory.get().FromJson("helloWorld_numbers");
     }
     @Test
     public void parse(){
@@ -39,6 +39,29 @@ public class FSMachineTest {
     @Test
     public void run(){
         Assert.assertEquals("[( 1, 1), ( 0, 2), ( 1, 2)]",jsonNumbers.debug("101").toString());
+    }
+
+    @Test
+    public void testFail() throws Exception {
+        Assert.assertFalse(jsonNumbers.run("000"));
+        Assert.assertFalse(plainNumbers.run("000"));
+
+
+    }
+    @Test
+    public void testPass() throws Exception {
+        Assert.assertTrue( jsonNumbers.run("001"));
+        Assert.assertTrue( plainNumbers.run("001"));
+    }
+    @Test
+    public void testOutOfLanguage(){
+        try {
+            jsonNumbers.run("001e");
+            Assert.fail();
+        } catch (Exception e) {
+            Assert.assertEquals(e.getMessage(),"there doesnt exist a transition for character: e in state: 1");
+        }
+
     }
 
 

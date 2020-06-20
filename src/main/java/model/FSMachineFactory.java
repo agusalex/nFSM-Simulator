@@ -13,39 +13,38 @@ import java.util.*;
 
 public class FSMachineFactory {
     static FSMachineFactory instance;
+
     private FSMachineFactory() {
 
     }
 
-    public static FSMachineFactory get(){
-        if(instance==null){
+    public static FSMachineFactory get() {
+        if (instance == null) {
             instance = new FSMachineFactory();
         }
         return instance;
     }
 
+   /* public nFSMachine FromPlainText(String fsmFile) {
 
-
-    public FSMachine getFSMachineFromPlainText(String fsmFile){
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/"+fsmFile+".fsm"), StandardCharsets.UTF_8));
+        BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/" + fsmFile + ".nfsm"), StandardCharsets.UTF_8));
         HashMap<String, HashSet<Tuple<Character, String>>> transitions = new HashMap<>();
         ArrayList<String> Final = new ArrayList<>();
         ArrayList<String> initial = new ArrayList<>();
         initial.add("1");
         try {
-            String[] language = br.readLine().replaceAll("\\s+","").split(",");
+            String[] language = br.readLine().replaceAll("\\s+", "").split(",");
             int stateCount = Integer.parseInt(br.readLine());
-            Final = new ArrayList<>(Arrays.asList(br.readLine().replaceAll("\\s+","").split(",")));
-
-            for (int i = 0; i < stateCount*language.length; i++) {
-                String line = br.readLine().replaceAll("\\s+","");
-
+            Final = new ArrayList<>(Arrays.asList(br.readLine().replaceAll("\\s+", "").split(",")));
+                String crudeLine = br.readLine();
+            while (crudeLine != null) {
+                String line =crudeLine.replaceAll("\\s+", "");
                 String[] fields = line.split(",");
                 String from = fields[0];
                 String[] transition = fields[1].split("->");
                 transitions.computeIfAbsent(from, k -> new HashSet<>());
-                transitions.get(from).add(new Tuple<>(transition[0].charAt(0),transition[1]));
+                transitions.get(from).add(new Tuple<>(transition[0].charAt(0), transition[1]));
+                crudeLine = br.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -61,8 +60,45 @@ public class FSMachineFactory {
         return buildFSMachine(transitions, initial, Final);
 
     }
-    public FSMachine getFsMachineFromJson(String jsonFile) {
-        JSONObject jsonObject = readResource(new JSONParser(), "/"+jsonFile+".json");
+*/
+    public FSMachine FromPlainText(String fsmFile) {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/" + fsmFile + ".fsm"), StandardCharsets.UTF_8));
+        HashMap<String, HashSet<Tuple<Character, String>>> transitions = new HashMap<>();
+        ArrayList<String> Final = new ArrayList<>();
+        ArrayList<String> initial = new ArrayList<>();
+        initial.add("1");
+        try {
+            String[] language = br.readLine().replaceAll("\\s+", "").split(",");
+            int stateCount = Integer.parseInt(br.readLine());
+            Final = new ArrayList<>(Arrays.asList(br.readLine().replaceAll("\\s+", "").split(",")));
+
+            for (int i = 0; i < stateCount * language.length; i++) {
+                String line = br.readLine().replaceAll("\\s+", "");
+
+                String[] fields = line.split(",");
+                String from = fields[0];
+                String[] transition = fields[1].split("->");
+                transitions.computeIfAbsent(from, k -> new HashSet<>());
+                transitions.get(from).add(new Tuple<>(transition[0].charAt(0), transition[1]));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        return buildFSMachine(transitions, initial, Final);
+
+    }
+
+    public FSMachine FromJson(String jsonFile) {
+        JSONObject jsonObject = readResource(new JSONParser(), "/" + jsonFile + ".json");
         HashMap<String, JSONObject> jsonStates = buildStates(jsonObject);
         HashSet<Character> language = buildLanguage(jsonObject);
 
@@ -124,6 +160,26 @@ public class FSMachineFactory {
         return transitions;
     }
 
+/*-
+    private FSMachine buildNFSMachine(HashMap<String, HashSet<Tuple<Character, String>>> transitions, ArrayList<String> initial, ArrayList<String> Final) {
+
+
+        HashMap<String, State> states = new HashMap<>();
+
+        transitions.forEach((k, v) -> states.put(k, new State(k)));
+
+        transitions.forEach((k, v) -> {
+            State state = states.get(k);
+            v.forEach(transition -> state.addTransition(transition.getFirst(), states.get(transition.getSecond())));
+        });
+
+
+        State initialState = states.get(initial.get(0));
+        HashSet<State> finalStates = new HashSet<>();
+        Final.forEach(state -> finalStates.add(states.get(state)));
+        return new FSMachine(initialState, finalStates);
+    }*/
+
     private FSMachine buildFSMachine(HashMap<String, HashSet<Tuple<Character, String>>> transitions, ArrayList<String> initial, ArrayList<String> Final) {
 
 
@@ -142,8 +198,26 @@ public class FSMachineFactory {
         Final.forEach(state -> finalStates.add(states.get(state)));
         return new FSMachine(initialState, finalStates);
     }
+/*
+    private nFSMachine buildNFSMachine(HashMap<String, HashSet<Tuple<Character, String>>> transitions, ArrayList<String> initial, ArrayList<String> Final) {
 
 
+        HashMap<String, State> states = new HashMap<>();
+
+        transitions.forEach((k, v) -> states.put(k, new State(k)));
+
+        transitions.forEach((k, v) -> {
+            State state = states.get(k);
+            v.forEach(transition -> state.addTransition(transition.getFirst(), states.get(transition.getSecond())));
+        });
+
+
+        State initialState = states.get(initial.get(0));
+        HashSet<State> finalStates = new HashSet<>();
+        Final.forEach(state -> finalStates.add(states.get(state)));
+        return new FSMachine(initialState, finalStates);
+    }
+*/
     private JSONObject readResource(JSONParser parser, String filename) {
         BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename), StandardCharsets.UTF_8));
         Object jsonObj = null;
