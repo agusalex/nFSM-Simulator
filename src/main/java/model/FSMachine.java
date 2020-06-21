@@ -24,9 +24,13 @@ public class FSMachine {
 
     @Override
     public String toString() {
+        final String[] accepting = {"{ "};
+        acceptingStates.forEach(a-> accepting[0] +=a.getName());
+        accepting[0]+=" }";
+
         return "FSMachine{" +
-                "initialState=" + initialState +
-                ", acceptingStates=" + acceptingStates +
+                "initialState=" + initialState.getName() +
+                ", acceptingStates=" + accepting +
                 '}';
     }
 

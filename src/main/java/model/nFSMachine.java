@@ -26,9 +26,13 @@ public class nFSMachine {
 
     @Override
     public String toString() {
+        final String[] accepting = {"{ "};
+        acceptingStates.forEach(a-> accepting[0] +=", "+a.getName());
+        accepting[0]+=" }";
+
         return "FSMachine{" +
-                "initialState=" + initialState +
-                ", acceptingStates=" + acceptingStates +
+                "initialState=" + initialState.getName() +
+                ", acceptingStates=" + Arrays.toString(accepting) +
                 '}';
     }
 
@@ -75,7 +79,7 @@ private HashSet<nState> debugTransition(nState q, String a, ArrayList<HashSet<Tu
         HashSet<Tuple<String,String>> historyItem = new HashSet<>();
         for (nState state:
                 q.transition(c)) {
-            ret.addAll(transition(state, smaller));
+            ret.addAll(debugTransition(state, smaller,history));
             historyItem.add(new Tuple<>(""+c,q.getName()));
         }
         history.add(historyItem);

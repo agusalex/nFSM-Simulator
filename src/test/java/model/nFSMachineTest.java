@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class nFSMachineTest {
-    private nFSMachine getNFsMachineTestCase() {
+  /*  private nFSMachine getNFsMachineTestCase() {
         HashMap<Character, Set<nState>> finalStateTransitions = new HashMap<>();
         nState finalState = new nState(finalStateTransitions, "final");
         HashSet<nState> transitionsFor1Final = new HashSet<>();
@@ -26,27 +26,32 @@ public class nFSMachineTest {
         finalStates.add(finalState);
         return new nFSMachine(initialState, finalStates);
     }
-    FSMachine plainNumbers;
-    FSMachine jsonNumbers;
+
 
 
     @Test
     public void manual(){
         System.out.println(getNFsMachineTestCase().debug("111010101"));
-    }
-
+    }*/
+    nFSMachine plainNumbers;
+   // nFSMachine jsonNumbers;
     @Before
     public void setUp() {
-        plainNumbers = FSMachineFactory.get().FromPlainText("helloWorld_numbers");
-        jsonNumbers = FSMachineFactory.get().FromJson("helloWorld_numbers");
+        plainNumbers = FSMachineFactory.get().FromPlainText_ND("helloWorld_numbers");
+       // jsonNumbers = FSMachineFactory.get().FromJson_ND("helloWorld_numbers_nd");
     }
     @Test
     public void parse(){
-        Assert.assertEquals(plainNumbers.toString(),jsonNumbers.toString());
+     //   System.out.println(jsonNumbers.toString());
+    //    Assert.assertEquals(plainNumbers.toString(),jsonNumbers.toString());
     }
     @Test
-    public void run(){
-        Assert.assertEquals("[( 1, 1), ( 0, 2), ( 1, 2)]",jsonNumbers.debug("101").toString());
+    public void debug(){
+        System.out.println(plainNumbers);
+        Assert.assertTrue(plainNumbers.run("101"));
+        Assert.assertFalse(plainNumbers.run("000"));
+       // Assert.assertEquals("[( 1, 1), ( 0, 2), ( 1, 2)]",plainNumbers.debug("101").toString());
+
     }
 
 

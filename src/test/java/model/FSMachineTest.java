@@ -45,8 +45,6 @@ public class FSMachineTest {
     public void testFail() throws Exception {
         Assert.assertFalse(jsonNumbers.run("000"));
         Assert.assertFalse(plainNumbers.run("000"));
-
-
     }
     @Test
     public void testPass() throws Exception {

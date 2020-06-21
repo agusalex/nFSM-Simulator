@@ -38,17 +38,18 @@ public class nState {
 
         String transitions = "{";
         for (Map.Entry<Character, Set<nState>> entry : map.entrySet()) {
+            final String[] statesToTransition = {"{ "};
+            entry.getValue().forEach(v -> statesToTransition[0] += " "+v.name+",");
+            String states = statesToTransition[0]+"}";
             transitions += "Char = " + entry.getKey() +
-                    ", State = " + entry.getValue() + ", ";
+                    ", States = " +  states + ", ";
 
         }
         transitions += "}";
 
 
-        return "FiniteState{" +
-                "map=" + transitions +
-                " , name='" + name + '\'' +
-                '}';
+        return "NDFstate("+name+"): "+
+                "map=" + transitions ;
     }
 
 
@@ -60,7 +61,7 @@ public class nState {
         return map;
     }
 
-    public void addTransition(Character c, Set<nState> s) {
+    public void addTransitions(Character c, Set<nState> s) {
         map.put(c, s);
     }
 
