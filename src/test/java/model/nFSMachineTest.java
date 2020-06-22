@@ -43,6 +43,13 @@ public class nFSMachineTest {
         Assert.assertTrue( jsonNumbers.run("001"));
         Assert.assertTrue( plainNumbers.run("001"));
     }
+
+    @Test
+    public void testPass2() throws Exception {
+        nFSMachine  onlya = FSMachineFactory.get().FromPlainText_ND("stringsFinishedWithA");
+   //     Assert.assertFalse( onlya.run("bbbb"));
+        Assert.assertTrue( onlya.run("bbbba"));
+    }
     @Test
     public void testOutOfLanguage(){
         try {
@@ -52,6 +59,11 @@ public class nFSMachineTest {
             Assert.assertEquals(e.getMessage(),"there doesnt exist a transition for character: e in state: 1");
         }
 
+    }
+
+    @Test
+    public void convertNFAtoDFA(){
+        FSMachineFactory.get().nfa2DfaPlainText("");
     }
 
 

@@ -23,7 +23,7 @@ public class nFSMachine {
 
 
     public boolean run(String input) throws Exception {
-        System.out.println(this);
+      //  System.out.println(this);
         acceptingStates.retainAll(transition(initialState, input));
         return acceptingStates.size()>=1;
     }
@@ -69,9 +69,11 @@ public class nFSMachine {
         }
         char c = a.charAt(a.length() - 1);
         String smaller = a.substring(0, a.length() - 1);
+        if(q==null) System.out.println("Q es null?: ");
+        else System.out.println(q.getName());
         for (nState state:
         q.transition(c)) {
-            System.out.println(q.getName()+" :"+c+" -> "+state.getName());
+           // System.out.println(q.getName()+" :"+c+" -> "+state.getName());
             ret.addAll(transition(state, smaller));
         }
 

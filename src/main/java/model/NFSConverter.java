@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class NFSConverter {
 	
-	private ArrayList<String> q0;
+	private String q0;
 	private Map<String, HashSet<Tuple<Character, String>>> trasitions;
 	private List<String> finalStates;
 	HashSet<Character> language;
@@ -18,7 +18,7 @@ public class NFSConverter {
 
 	
 	
-	public NFSConverter(ArrayList<String> q0, Map<String, HashSet<Tuple<Character, String>>> trasitions,
+	public NFSConverter(String q0, Map<String, HashSet<Tuple<Character, String>>> trasitions,
 			List<String> finalStates, HashSet<Character> language) {
 
 		this.q0 = q0;
@@ -46,7 +46,7 @@ public class NFSConverter {
 		Set<Set<String>> Q_d = new HashSet<>();
 		Map<Set<String>, Tuple<Character, Set<String>>> transitions_d = new HashMap<>(); 
 		
-		Q_d.add(new HashSet<String>(Arrays.asList(q0.get(0))));
+		Q_d.add(new HashSet<String>(Arrays.asList(q0)));
 		
 		//for S : Q_d
 		for(Set<String> S : Q_d)
@@ -71,8 +71,13 @@ public class NFSConverter {
 				transitions_d.put(dState, tuple);					
 				
 			}
-		
-		
+		final String[] temp = {""};
+		Q_d.forEach(state->{
+			temp[0] += state.toString();
+		});
+		String outputStates = temp[0].substring(1,temp[0].length()-1);
+
+		return null;
 	}
 	
 }

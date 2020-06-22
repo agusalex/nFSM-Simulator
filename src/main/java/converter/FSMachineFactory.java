@@ -58,9 +58,46 @@ public class FSMachineFactory {
                 e.printStackTrace();
             }
         }
-
+        System.out.println("transitions: "+transitions +" ,initial: "+initial+" Final: "+Final+" language: "+language);
         return buildNFSMachine(transitions, initial, Final, language, nfsmFile);
     }
+
+    public String nfa2DfaPlainText(String nfsmFile) {
+        BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/" + nfsmFile + ".nfsm"), StandardCharsets.UTF_8));
+        HashMap<String, HashSet<Tuple<Character, String>>> transitions = new HashMap<>();
+        ArrayList<String> Final = new ArrayList<>();
+        ArrayList<String> initial = new ArrayList<>();
+        initial.add("1");
+        HashSet<Character> language = new HashSet<>();
+        try {
+            String[] lang = br.readLine().replaceAll("\\s+", "").split(",");
+            Arrays.asList(lang).forEach(c -> language.add(c.charAt(0)));
+            int stateCount = Integer.parseInt(br.readLine()); //Dont comment this
+            Final = new ArrayList<>(Arrays.asList(br.readLine().replaceAll("\\s+", "").split(",")));
+            String crudeLine = br.readLine();
+            while (crudeLine != null) {
+                String line = crudeLine.replaceAll("\\s+", "");
+                String[] fields = line.split(",");
+                String from = fields[0];
+                String[] transition = fields[1].split("->");
+                transitions.computeIfAbsent(from, k -> new HashSet<>());
+                transitions.get(from).add(new Tuple<>(transition[0].charAt(0), transition[1]));
+                crudeLine = br.readLine();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return new NFSConverter(initial.get(0),transitions, Final, language).convert();
+    }
+
 
     public FSMachine FromPlainText(String fsmFile) {
 
@@ -119,6 +156,9 @@ public class FSMachineFactory {
         HashMap<String, HashSet<Tuple<Character, String>>> transitions = buildTransitions(jsonStates, initial, Final, language);
         return buildNFSMachine(transitions, initial, Final, language, jsonFile);
     }
+
+
+
 
     public FSMachine FromJson(String jsonFile) {
         JSONObject jsonObject = readResource(new JSONParser(), "/" + jsonFile + ".json");
