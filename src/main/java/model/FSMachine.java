@@ -7,8 +7,12 @@ import java.util.Set;
 public class FSMachine {
     private final State initialState;
     private final Set<State> acceptingStates;
+    private String name = "";
 
-    public FSMachine(State initialState, Set<State> acceptingStates) {
+
+
+    public FSMachine(String name, State initialState, Set<State> acceptingStates) {
+        this.name = name;
         this.initialState = initialState;
         this.acceptingStates = acceptingStates;
     }
@@ -22,13 +26,21 @@ public class FSMachine {
         return debugTransition(initialState, input, new ArrayList<>());
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         final String[] accepting = {"{ "};
         acceptingStates.forEach(a-> accepting[0] +=a.getName());
         accepting[0]+=" }";
 
-        return "FSMachine{" +
+        return "FSMachine(" +this.name+"){"+
                 "initialState=" + initialState.getName() +
                 ", acceptingStates=" + accepting +
                 '}';
