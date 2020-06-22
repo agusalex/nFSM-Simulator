@@ -1,5 +1,6 @@
-package model;
+package converter;
 
+import model.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -26,7 +27,7 @@ public class FSMachineFactory {
     }
 
     public nFSMachine FromPlainText_ND(String nfsmFile) {
-        BufferedReader br = new BufferedReader(new InputStreamReader(Mani.class.getResourceAsStream("/" + "helloWorld_numbers" + ".nfsm"), StandardCharsets.UTF_8));
+        BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/" + nfsmFile + ".nfsm"), StandardCharsets.UTF_8));
         HashMap<String, HashSet<Tuple<Character, String>>> transitions = new HashMap<>();
         ArrayList<String> Final = new ArrayList<>();
         ArrayList<String> initial = new ArrayList<>();
@@ -35,7 +36,7 @@ public class FSMachineFactory {
         try {
             String[] lang = br.readLine().replaceAll("\\s+", "").split(",");
             Arrays.asList(lang).forEach(c -> language.add(c.charAt(0)));
-            int stateCount = Integer.parseInt(br.readLine());
+            int stateCount = Integer.parseInt(br.readLine()); //Dont comment this
             Final = new ArrayList<>(Arrays.asList(br.readLine().replaceAll("\\s+", "").split(",")));
             String crudeLine = br.readLine();
             while (crudeLine != null) {
@@ -58,9 +59,7 @@ public class FSMachineFactory {
             }
         }
 
-        System.out.println("Transitions("+nfsmFile+"): "+transitions);
-        return buildNFSMachine(transitions, initial, Final, language);
-
+        return buildNFSMachine(transitions, initial, Final, language, nfsmFile);
     }
 
     public FSMachine FromPlainText(String fsmFile) {
@@ -93,7 +92,8 @@ public class FSMachineFactory {
                 e.printStackTrace();
             }
         }
-        return buildFSMachine(transitions, initial, Final);
+
+        return buildFSMachine(transitions, initial, Final, "Transitions( "+fsmFile+" )"+transitions);
 
     }
 
@@ -117,8 +117,7 @@ public class FSMachineFactory {
         final ArrayList<String> initial = new ArrayList<>();
         final ArrayList<String> Final = new ArrayList<>();
         HashMap<String, HashSet<Tuple<Character, String>>> transitions = buildTransitions(jsonStates, initial, Final, language);
-        System.out.println("Transitions("+jsonFile+"): "+transitions);
-        return buildNFSMachine(transitions, initial, Final, language);
+        return buildNFSMachine(transitions, initial, Final, language, jsonFile);
     }
 
     public FSMachine FromJson(String jsonFile) {
@@ -129,7 +128,7 @@ public class FSMachineFactory {
         final ArrayList<String> initial = new ArrayList<>();
         final ArrayList<String> Final = new ArrayList<>();
         HashMap<String, HashSet<Tuple<Character, String>>> transitions = buildTransitions(jsonStates, initial, Final, language);
-        return buildFSMachine(transitions, initial, Final);
+        return buildFSMachine(transitions, initial, Final, jsonFile);
     }
 
     private HashMap<String, JSONObject> buildStates(JSONObject jsonObject) {
@@ -183,7 +182,7 @@ public class FSMachineFactory {
         return transitions;
     }
 
-    private nFSMachine buildNFSMachine(HashMap<String, HashSet<Tuple<Character, String>>> transitions, ArrayList<String> initial, ArrayList<String> Final, HashSet<Character> language) {
+    private nFSMachine buildNFSMachine(HashMap<String, HashSet<Tuple<Character, String>>> transitions, ArrayList<String> initial, ArrayList<String> Final, HashSet<Character> language, String name) {
 
         HashMap<String, nState> states = new HashMap<>();  //KEY= name of state, Value = Object Reference of State
         transitions.forEach((k, v) -> states.put(k, new nState(k)));
@@ -197,8 +196,7 @@ public class FSMachineFactory {
         nState initialState = states.get(initial.get(0));
         HashSet<nState> finalStates = new HashSet<>();
         Final.forEach(state -> finalStates.add(states.get(state)));
-
-        return new nFSMachine(initialState, finalStates);
+        return new nFSMachine(name+"( "+transitions+" ): ", initialState, finalStates);
     }
 
     private HashSet<nState> filter(HashSet<Tuple<Character, String>> origin, Character c, HashMap<String, nState> states) {
@@ -214,7 +212,7 @@ public class FSMachineFactory {
         return filtered;
     }
 
-    private FSMachine buildFSMachine(HashMap<String, HashSet<Tuple<Character, String>>> transitions, ArrayList<String> initial, ArrayList<String> Final) {
+    private FSMachine buildFSMachine(HashMap<String, HashSet<Tuple<Character, String>>> transitions, ArrayList<String> initial, ArrayList<String> Final, String name) {
 
 
         HashMap<String, State> states = new HashMap<>();
@@ -230,7 +228,7 @@ public class FSMachineFactory {
         State initialState = states.get(initial.get(0));
         HashSet<State> finalStates = new HashSet<>();
         Final.forEach(state -> finalStates.add(states.get(state)));
-        return new FSMachine(initialState, finalStates);
+        return new FSMachine("Transitions( "+name+" ):"+transitions, initialState, finalStates);
     }
 
     private JSONObject readResource(JSONParser parser, String filename) {

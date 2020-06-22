@@ -1,5 +1,6 @@
 package model;
 
+import converter.FSMachineFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +23,7 @@ public class FSMachineTest {
         HashSet<State> finalStates = new HashSet<>();
 
         finalStates.add(finalState);
-        return new FSMachine(initialState, finalStates);
+        return new FSMachine("test case machine" ,initialState, finalStates);
     }
     FSMachine plainNumbers;
     FSMachine jsonNumbers;

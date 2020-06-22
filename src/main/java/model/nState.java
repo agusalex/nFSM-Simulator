@@ -53,7 +53,10 @@ public class nState {
     }
 
 
-    public Set<nState> transition(Character q) {
+    public Set<nState> transition(Character q) throws Exception {
+        if(map.get(q)==null){
+            throw new Exception("there doesnt exist a transition for character: "+q+" in state: "+name);
+        }
         return map.get(q);
     }
 

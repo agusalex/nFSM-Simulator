@@ -5,14 +5,25 @@ import java.util.*;
 public class nFSMachine {
     private final nState initialState;
     private final Set<nState> acceptingStates;
+    private String name;
 
-    public nFSMachine(nState initialState, Set<nState> acceptingStates) {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public nFSMachine(String name, nState initialState, Set<nState> acceptingStates) {
+        this.name = name;
         this.initialState = initialState;
         this.acceptingStates = acceptingStates;
     }
 
 
-    public boolean run(String input) {
+    public boolean run(String input) throws Exception {
+        System.out.println(this);
         acceptingStates.retainAll(transition(initialState, input));
         return acceptingStates.size()>=1;
     }
@@ -30,8 +41,8 @@ public class nFSMachine {
         acceptingStates.forEach(a-> accepting[0] +=", "+a.getName());
         accepting[0]+=" }";
 
-        return "FSMachine{" +
-                "initialState=" + initialState.getName() +
+        return name+
+                " initialState=" + initialState.getName() +
                 ", acceptingStates=" + Arrays.toString(accepting) +
                 '}';
     }
@@ -50,7 +61,7 @@ public class nFSMachine {
         return Objects.hash(initialState, acceptingStates);
     }
 
-    private HashSet<nState> transition(nState q, String a) {
+    private HashSet<nState> transition(nState q, String a) throws Exception {
         HashSet<nState> ret = new HashSet<>();
         if (a.length() == 0){
             ret.add(q);
@@ -60,6 +71,7 @@ public class nFSMachine {
         String smaller = a.substring(0, a.length() - 1);
         for (nState state:
         q.transition(c)) {
+            System.out.println(q.getName()+" :"+c+" -> "+state.getName());
             ret.addAll(transition(state, smaller));
         }
 
@@ -77,10 +89,15 @@ private HashSet<nState> debugTransition(nState q, String a, ArrayList<HashSet<Tu
         char c = a.charAt(a.length() - 1);
         String smaller = a.substring(0, a.length() - 1);
         HashSet<Tuple<String,String>> historyItem = new HashSet<>();
-        for (nState state:
-                q.transition(c)) {
-            ret.addAll(debugTransition(state, smaller,history));
-            historyItem.add(new Tuple<>(""+c,q.getName()));
+        try {
+            for (nState state :
+                    q.transition(c)) {
+                ret.addAll(debugTransition(state, smaller, history));
+                historyItem.add(new Tuple<>("" + c, state.getName()));
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
         history.add(historyItem);
 
