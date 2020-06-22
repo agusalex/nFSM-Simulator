@@ -67,14 +67,14 @@ public class nFSMachine {
             ret.add(q);
             return ret;
         }
-        char c = a.charAt(a.length() - 1);
-        String smaller = a.substring(0, a.length() - 1);
-        if(q==null) System.out.println("Q es null?: ");
-        else System.out.println(q.getName());
+        char c = a.charAt(0);
+        String smaller = a.substring(1);
         for (nState state:
         q.transition(c)) {
-           // System.out.println(q.getName()+" :"+c+" -> "+state.getName());
+            System.out.println(q.getName()+" :"+c+" -> "+state.getName());
+
             ret.addAll(transition(state, smaller));
+
         }
 
         return ret;
@@ -88,8 +88,8 @@ private HashSet<nState> debugTransition(nState q, String a, ArrayList<HashSet<Tu
             ret.add(q);
             return ret;
         }
-        char c = a.charAt(a.length() - 1);
-        String smaller = a.substring(0, a.length() - 1);
+        char c = a.charAt(0);
+        String smaller = a.substring(1);
         HashSet<Tuple<String,String>> historyItem = new HashSet<>();
         try {
             for (nState state :

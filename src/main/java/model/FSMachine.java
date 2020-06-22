@@ -62,16 +62,16 @@ public class FSMachine {
 
     private State transition(State q, String a) throws Exception {
         if (a.length() == 0) return q;
-        char c = a.charAt(a.length() - 1);
-        String smaller = a.substring(0, a.length() - 1);
+        char c = a.charAt(0);
+        String smaller = a.substring(1);
         return transition(q.transition(c), smaller);
     }
 
     private ArrayList<Tuple<String, String>> debugTransition(State q, String a, ArrayList<Tuple<String, String>> history) {
 
         if (a.length() == 0) return history;
-        char c = a.charAt(a.length() - 1);
-        String smaller = a.substring(0, a.length() - 1);
+        char c = a.charAt(0);
+        String smaller = a.substring(1);
         System.out.println(smaller);
         history.add(new Tuple<>("" + c, q.getName()));
         try {

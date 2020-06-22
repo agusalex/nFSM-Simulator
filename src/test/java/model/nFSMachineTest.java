@@ -9,11 +9,13 @@ public class nFSMachineTest {
 
     nFSMachine plainNumbers;
     nFSMachine jsonNumbers;
+    nFSMachine onlya;
 
     @Before
     public void setUp() {
         plainNumbers = FSMachineFactory.get().FromPlainText_ND("helloWorld_numbers_nd");
         jsonNumbers = FSMachineFactory.get().FromJson_ND("helloWorld_numbers_nd");
+        onlya = FSMachineFactory.get().FromPlainText_ND("stringsFinishedWithA");
 
     }
     @Test
@@ -46,9 +48,12 @@ public class nFSMachineTest {
 
     @Test
     public void testPass2() throws Exception {
-        nFSMachine  onlya = FSMachineFactory.get().FromPlainText_ND("stringsFinishedWithA");
-   //     Assert.assertFalse( onlya.run("bbbb"));
-        Assert.assertTrue( onlya.run("bbbba"));
+        Assert.assertTrue(onlya.run("bbbba"));
+    }
+
+    @Test
+    public void testNotPass2() throws Exception {
+        Assert.assertFalse(onlya.run("babaaab"));
     }
     @Test
     public void testOutOfLanguage(){
@@ -56,14 +61,16 @@ public class nFSMachineTest {
             jsonNumbers.run("001e");
             Assert.fail();
         } catch (Exception e) {
-            Assert.assertEquals(e.getMessage(),"there doesnt exist a transition for character: e in state: 1");
+            Assert.assertEquals(e.getMessage(),"there doesnt exist a transition for character: e in state: 2");
         }
 
     }
 
     @Test
     public void convertNFAtoDFA(){
-        FSMachineFactory.get().nfa2DfaPlainText("");
+
+        System.out.println("COVERSION");
+        System.out.println(FSMachineFactory.get().nfa2DfaPlainText("stringsFinishedWithA"));
     }
 
 

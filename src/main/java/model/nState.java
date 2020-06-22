@@ -57,6 +57,7 @@ public class nState {
         if(map.get(q)==null){
             throw new Exception("there doesnt exist a transition for character: "+q+" in state: "+name);
         }
+        map.get(q).removeIf(Objects::isNull);
         return map.get(q);
     }
 

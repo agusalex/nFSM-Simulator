@@ -77,7 +77,7 @@ public class NFSConverter {
 		});
 		String outputStates = temp[0].substring(1,temp[0].length()-1);
 
-		return null;
+		return Q_d.toString();
 	}
 	
 }

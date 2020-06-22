@@ -94,7 +94,7 @@ public class FSMachineFactory {
                 e.printStackTrace();
             }
         }
-
+        System.out.println(initial.get(0) +" "+ transitions +" "+ Final +" "+ language);
         return new NFSConverter(initial.get(0),transitions, Final, language).convert();
     }
 
