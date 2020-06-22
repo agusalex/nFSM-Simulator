@@ -1,4 +1,6 @@
-package model;
+package converter;
+
+import model.Tuple;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +18,9 @@ public class NFSConverter {
 	HashSet<Character> language;
 
 
-	
+	public static void main(String[] args){
+		System.out.println(FSMachineFactory.get().nfa2DfaPlainText("stringsFinishedWithA"));
+	}
 	
 	public NFSConverter(String q0, Map<String, HashSet<Tuple<Character, String>>> trasitions,
 			List<String> finalStates, HashSet<Character> language) {
