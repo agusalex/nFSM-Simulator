@@ -2,86 +2,99 @@ package converter;
 
 import model.Tuple;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class NFSConverter {
-	
-	private String q0;
-	private Map<String, HashSet<Tuple<Character, String>>> trasitions;
-	private List<String> finalStates;
-	HashSet<Character> language;
+
+    private String q0;
+    private Map<String, HashSet<Tuple<Character, String>>> trasitions;
+    private List<String> finalStates;
+    HashSet<Character> language;
 
 
-	public static void main(String[] args){
-		System.out.println(FSMachineFactory.get().nfa2DfaPlainText("stringsFinishedWithA"));
-	}
-	
-	public NFSConverter(String q0, Map<String, HashSet<Tuple<Character, String>>> trasitions,
-			List<String> finalStates, HashSet<Character> language) {
+    public static void main(String[] args) {
+        System.out.println(FSMachineFactory.get().nfa2DfaPlainText("stringsFinishedWithA"));
+    }
 
-		this.q0 = q0;
-		this.trasitions = trasitions;
-		this.finalStates = finalStates;
-		this.language = language;
-		
-	}
+    public NFSConverter(String q0, Map<String, HashSet<Tuple<Character, String>>> trasitions,
+                        List<String> finalStates, HashSet<Character> language) {
 
 
-	private Set<String> getTransitionsOfChar(Set<Tuple<Character, String>> transitions, Character c){
-		Set<String> filteredTransitions = new HashSet<>();
-		transitions.forEach(tuple->{
-			if(tuple.getFirst()==c){
-				filteredTransitions.add(tuple.getSecond());
-			}
-		});
-		return filteredTransitions;
-	}
+        this.q0 = q0;
+        this.trasitions = trasitions;
+        this.finalStates = finalStates;
+        this.language = language;
 
-	public String convert() {
-		
-		//<Q_d, \Sigma, q_o, F_d, \delta_d>
-		
-		Set<Set<String>> Q_d = new HashSet<>();
-		Map<Set<String>, Tuple<Character, Set<String>>> transitions_d = new HashMap<>(); 
-		
-		Q_d.add(new HashSet<String>(Arrays.asList(q0)));
-		
-		//for S : Q_d
-		for(Set<String> S : Q_d)
-			//for symbol : \Sigma
-			
-			for(Character a : this.language) {
-				
-				Set<String> dState = new HashSet<>();
-				
-				for (String p : S) {
+    }
 
-					//Busco las transisicion donde charachter = a
-					Set<String> transitions_a = getTransitionsOfChar(this.trasitions.get(p),a);
-					//Luego, agrego los estados a los que voy a dState
-					dState.addAll(transitions_a);
-					
-				}
-				
-				//\delta_d (S.toString(), symbol) = U_{p \in S_n} \delta_n (p, symbol) = Set
-				
-				Tuple<Character, Set<String>> tuple = new Tuple<>(a, dState);				
-				transitions_d.put(dState, tuple);					
-				
-			}
-		final String[] temp = {""};
-		Q_d.forEach(state->{
-			temp[0] += state.toString();
-		});
-		String outputStates = temp[0].substring(1,temp[0].length()-1);
 
-		return Q_d.toString();
-	}
-	
+    private Set<String> getTransitionsOfChar(Set<Tuple<Character, String>> transition, Character c) {
+        Set<String> filteredTransitions = new HashSet<>();
+        transition.forEach(tuple -> {
+            if (tuple.getFirst() == c) {
+                filteredTransitions.add(tuple.getSecond());
+            }
+        });
+        return filteredTransitions;
+    }
+
+    public String convert() {
+
+        //<Q_d, \Sigma, q_o, F_d, \delta_d>
+
+        Set<Set<String>> Q_d = new HashSet<>();
+        Map<Set<String>, HashSet<Tuple<Character, Set<String>>>> transitions_d = new HashMap<>();
+
+        Q_d.add(new HashSet<>(Arrays.asList(q0)));
+
+        //for S : Q_d
+        Set<Set<String>> Q_d_old = new HashSet<>();
+
+        while (!Q_d_old.equals(Q_d)) {
+         //  System.out.println("Q_D: " + Q_d);
+            Set<Set<String>> diff = new HashSet<>(Q_d);
+            diff.removeAll(Q_d_old);
+            Q_d_old = new HashSet<>(Q_d);
+
+            for (Set<String> S : Q_d) {
+                //for symbol : \Sigma
+
+                for (Character a : this.language) {
+                    Set<String> dState = new HashSet<>();
+                    for (String p : S) {
+
+                       // System.out.println("P: " + p + " ,  A: " + a);
+                        //Busco las transisicion donde charachter = a
+                        if (this.trasitions.get(p) != null) {
+                            Set<String> transitions_a = getTransitionsOfChar(this.trasitions.get(p), a);
+                        //    System.out.println("Transitions_a: " + transitions_a);
+                            dState.addAll(transitions_a);
+
+                        }
+                        //Luego, agrego los estados a los que voy a dState
+
+
+                    }
+
+                    //\delta_d (S.toString(), symbol) = U_{p \in S_n} \delta_n (p, symbol) = Set
+                    Q_d.add(dState);
+                    Tuple<Character, Set<String>> tuple = new Tuple<>(a, dState);
+                    transitions_d.computeIfAbsent(S, k -> new HashSet<>());
+                    transitions_d.get(S).add(tuple);
+                  //  System.out.println("State: "+ S+"Tupla: "+ tuple );
+
+
+                }
+
+            }
+
+
+        }
+
+        System.out.println();
+        String Q_d_s = Q_d.toString();
+        String states = Q_d.toString().substring(1, Q_d_s.length() - 1);
+        return "States: { " + states + " } \nTransitions: " + transitions_d + "\nLanguage: "+language+"\nInitial:"+q0+"\nFinal: "+finalStates;
+    }
+
 }
