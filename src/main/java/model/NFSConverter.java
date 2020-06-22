@@ -44,36 +44,35 @@ public class NFSConverter {
 		//<Q_d, \Sigma, q_o, F_d, \delta_d>
 		
 		Set<Set<String>> Q_d = new HashSet<>();
-		Map<String, HashSet<Tuple<Character, String>>> trasitions_d = new HashMap<>(); 
+		Map<Set<String>, Tuple<Character, Set<String>>> transitions_d = new HashMap<>(); 
 		
 		Q_d.add(new HashSet<String>(Arrays.asList(q0.get(0))));
 		
 		//for S : Q_d
 		for(Set<String> S : Q_d)
 			//for symbol : \Sigma
-			//\delta_d (S.toString(), symbol) = U_{p \in S_n} \delta_n (p, symbol) = Set 
+			
 			for(Character a : this.language) {
 				
 				Set<String> dState = new HashSet<>();
 				
 				for (String p : S) {
 
-
 					//Busco las transisicion donde charachter = a
 					Set<String> transitions_a = getTransitionsOfChar(this.trasitions.get(p),a);
 					//Luego, agrego los estados a los que voy a dState
+					dState.addAll(transitions_a);
 					
 				}
 				
-				//Q_d.add(dState)
-					
+				//\delta_d (S.toString(), symbol) = U_{p \in S_n} \delta_n (p, symbol) = Set
+				
+				Tuple<Character, Set<String>> tuple = new Tuple<>(a, dState);				
+				transitions_d.put(dState, tuple);					
+				
 			}
-		
-		
-		return null;
 		
 		
 	}
 	
-
 }
