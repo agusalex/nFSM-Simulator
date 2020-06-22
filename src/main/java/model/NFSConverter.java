@@ -28,6 +28,17 @@ public class NFSConverter {
 		
 	}
 
+
+	private Set<String> getTransitionsOfChar(Set<Tuple<Character, String>> transitions, Character c){
+		Set<String> filteredTransitions = new HashSet<>();
+		transitions.forEach(tuple->{
+			if(tuple.getFirst()==c){
+				filteredTransitions.add(tuple.getSecond());
+			}
+		});
+		return filteredTransitions;
+	}
+
 	public String convert() {
 		
 		//<Q_d, \Sigma, q_o, F_d, \delta_d>
@@ -46,9 +57,10 @@ public class NFSConverter {
 				Set<String> dState = new HashSet<>();
 				
 				for (String p : S) {
-					
-					Set<Tuple<Character, String>> trasition = this.trasitions.get(p);
+
+
 					//Busco las transisicion donde charachter = a
+					Set<String> transitions_a = getTransitionsOfChar(this.trasitions.get(p),a);
 					//Luego, agrego los estados a los que voy a dState
 					
 				}
